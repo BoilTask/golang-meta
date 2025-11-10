@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"meta/object"
 	"strconv"
+	"strings"
 )
 
 func ConvertStringObjects[T object.Interface](limitCount int, objects ...T) string {
@@ -33,4 +34,12 @@ func Atoi64(s string) (int64, error) {
 
 func Itoa64(i int64) string {
 	return strconv.FormatInt(i, 10)
+}
+
+func LowerSlice(src []string) []string {
+	dst := make([]string, len(src))
+	for i, s := range src {
+		dst[i] = strings.ToLower(s)
+	}
+	return dst
 }
