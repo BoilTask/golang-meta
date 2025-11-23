@@ -2,13 +2,14 @@ package rpc
 
 import (
 	"fmt"
-	"google.golang.org/grpc"
 	"log/slog"
 	"meta/engine"
 	metaerror "meta/meta-error"
-	"meta/routine"
+	"meta/metaroutine"
 	"meta/subsystem"
 	"net"
+
+	"google.golang.org/grpc"
 )
 
 type Subsystem struct {
@@ -29,7 +30,7 @@ func (s *Subsystem) GetName() string {
 
 func (s *Subsystem) Start() error {
 	if s.GetPort != nil {
-		routine.SafeGoWithRestart(
+		metaroutine.SafeGoWithRestart(
 			"Rpc start",
 			s.startSubsystem,
 		)

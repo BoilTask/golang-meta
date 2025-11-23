@@ -2,18 +2,19 @@ package metahttp
 
 import (
 	"fmt"
-	"github.com/gin-contrib/gzip"
-	"github.com/gin-gonic/gin"
 	"log/slog"
 	metaerrorcode "meta/error-code"
-	"meta/meta-flag"
-	"meta/meta-log"
+	metaflag "meta/meta-flag"
+	metalog "meta/meta-log"
 	metapanic "meta/meta-panic"
 	metaresponse "meta/meta-response"
-	"meta/routine"
+	"meta/metaroutine"
 	"meta/subsystem"
 	"net/http"
 	"time"
+
+	"github.com/gin-contrib/gzip"
+	"github.com/gin-gonic/gin"
 )
 
 type Subsystem struct {
@@ -27,7 +28,7 @@ func (s *Subsystem) GetName() string {
 }
 
 func (s *Subsystem) Start() error {
-	routine.SafeGoWithRestart(
+	metaroutine.SafeGoWithRestart(
 		"Http start",
 		func() error {
 			err := s.startSubsystem()

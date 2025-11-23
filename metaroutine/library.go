@@ -1,4 +1,4 @@
-package routine
+package metaroutine
 
 import (
 	metapanic "meta/meta-panic"

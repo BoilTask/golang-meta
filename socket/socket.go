@@ -2,16 +2,17 @@ package socket
 
 import (
 	"context"
-	googleProto "github.com/golang/protobuf/proto"
 	"log/slog"
 	"meta/event"
 	metaerror "meta/meta-error"
+	"meta/metaroutine"
 	"meta/network"
-	"meta/routine"
 	socketEvent "meta/socket/event"
 	socketPayload "meta/socket/payload"
 	"net"
 	"sync"
+
+	googleProto "github.com/golang/protobuf/proto"
 )
 
 // Socket 封装 net.Conn 和消息通道
@@ -36,7 +37,7 @@ func NewSocket(socketIndex int32, conn net.Conn) *Socket {
 
 // Start 启动消息处理
 func (s *Socket) Start(callback func()) {
-	routine.SafeGoWithRestart(
+	metaroutine.SafeGoWithRestart(
 		"Socket start",
 		func() error {
 			return s.processSocket(callback)
@@ -46,7 +47,7 @@ func (s *Socket) Start(callback func()) {
 
 // Send 发送消息到连接
 func (s *Socket) Send(messageId int32, proto googleProto.Message) (int32, error) {
-	routine.SafeGo(
+	metaroutine.SafeGo(
 		"Socket Send",
 		func() error {
 			var protoBytes []byte
@@ -76,7 +77,7 @@ func (s *Socket) processSocket(callback func()) error {
 	var wg sync.WaitGroup
 	wg.Add(2)
 
-	routine.SafeGoWithRestart(
+	metaroutine.SafeGoWithRestart(
 		"SocketReceive",
 		func() error {
 			s.handleReceiveMessages(ctx, &wg)
@@ -85,7 +86,7 @@ func (s *Socket) processSocket(callback func()) error {
 		},
 	)
 
-	routine.SafeGoWithRestart(
+	metaroutine.SafeGoWithRestart(
 		"SocketSend",
 		func() error {
 			s.handleSendMessages(ctx, &wg)
