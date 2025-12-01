@@ -71,9 +71,9 @@ func (s *Subsystem) Start() error {
 		}
 
 		dsn := fmt.Sprintf(
-			"postgres://%s:%s@%s:%d/%s",
-			cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Database,
-		)
+				"postgres://%s:%s@%s:%d/%s?sslmode=disable&timezone=%s",
+				cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Database, s.defaultTimeZone,
+			)
 
 		db, err := gorm.Open(
 			postgres.Open(dsn), &gorm.Config{
