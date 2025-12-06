@@ -14,7 +14,7 @@ func IsRecaptchaTokenValid(ctx context.Context, secret string, response string, 
 	formData := url.Values{}
 	formData.Set("secret", secret)
 	formData.Set("response", response)
-	// formData.Set("remoteip", ip)
+	formData.Set("remoteip", ip)
 
 	resp, err := http.PostForm(verifyUrl, formData)
 	if err != nil {
@@ -31,6 +31,8 @@ func IsRecaptchaTokenValid(ctx context.Context, secret string, response string, 
 	}
 	var verifyResponseData struct {
 		Success     bool     `json:"success"`
+		Score       float64  `json:"score"`
+		Action      string   `json:"action"`
 		ChallengeTS string   `json:"challenge_ts"`
 		Hostname    string   `json:"hostname"`
 		ErrorCodes  []string `json:"error-codes"`
