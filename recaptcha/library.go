@@ -1,30 +1,22 @@
 package recaptcha
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"io"
 	metapanic "meta/meta-panic"
 	"net/http"
+	"net/url"
 )
 
 func IsRecaptchaTokenValid(ctx context.Context, secret string, response string, ip string) (bool, error) {
-	postTokenVerify := struct {
-		Secret   string `json:"secret"`
-		Response string `json:"response"`
-		RemoteIP string `json:"remoteip"`
-	}{
-		Secret:   secret,
-		Response: response,
-		RemoteIP: ip,
-	}
 	verifyUrl := "https://recaptcha.net/recaptcha/api/siteverify"
-	jsonData, err := json.Marshal(postTokenVerify)
-	if err != nil {
-		return false, err
-	}
-	resp, err := http.Post(verifyUrl, "application/json", bytes.NewBuffer(jsonData))
+	formData := url.Values{}
+	formData.Set("secret", secret)
+	formData.Set("response", response)
+	// formData.Set("remoteip", ip)
+
+	resp, err := http.PostForm(verifyUrl, formData)
 	if err != nil {
 		return false, err
 	}
@@ -38,7 +30,10 @@ func IsRecaptchaTokenValid(ctx context.Context, secret string, response string, 
 		return false, nil
 	}
 	var verifyResponseData struct {
-		Success bool `json:"success"`
+		Success     bool     `json:"success"`
+		ChallengeTS string   `json:"challenge_ts"`
+		Hostname    string   `json:"hostname"`
+		ErrorCodes  []string `json:"error-codes"`
 	}
 	err = json.NewDecoder(resp.Body).Decode(&verifyResponseData)
 	if err != nil {
