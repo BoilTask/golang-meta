@@ -3,13 +3,14 @@ package metafeishu
 import (
 	"bytes"
 	"encoding/json"
-	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
-	pkgerrors "github.com/pkg/errors"
 	"io"
 	"log"
 	metaerror "meta/meta-error"
 	"net/http"
 	"time"
+
+	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
+	pkgerrors "github.com/pkg/errors"
 )
 
 func GetFeishuMessageTextByFeishuOpenId(feishuOpenId string) string {
@@ -59,7 +60,7 @@ func IsFeishuErrorNoAvailabilityToUser(err error) bool {
 	}
 	err = pkgerrors.Cause(err)
 	var code CodeStruct
-	if err := json.Unmarshal([]byte(err.Error()), &code); err != nil {
+	if err = json.Unmarshal([]byte(err.Error()), &code); err != nil {
 		return false
 	}
 	return code.Code == 230013

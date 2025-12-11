@@ -3,11 +3,11 @@ package metafeishu
 import (
 	"context"
 	"encoding/json"
-	"foundation/foundation-feishu/variable"
 	"log/slog"
 	"meta/engine"
 	metaerror "meta/meta-error"
-	"meta/meta-flag"
+	"meta/meta-feishu/variable"
+	metaflag "meta/meta-flag"
 	metalog "meta/meta-log"
 	"meta/retry"
 	"meta/subsystem"
