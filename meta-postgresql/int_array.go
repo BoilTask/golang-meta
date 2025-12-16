@@ -14,7 +14,16 @@ func (a IntArray) Value() (driver.Value, error) {
 	if len(a) == 0 {
 		return "{}", nil
 	}
-	return json.Marshal(a)
+	// 构建 PostgreSQL 数组格式 {1,2,3}
+	result := "{"
+	for i, v := range a {
+		if i > 0 {
+			result += ","
+		}
+		result += fmt.Sprintf("%d", v)
+	}
+	result += "}"
+	return result, nil
 }
 
 // Scan 实现 sql.Scanner 接口，将数据库值转换为 Go 类型
