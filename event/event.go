@@ -5,7 +5,7 @@ import (
 	metaflag "meta/meta-flag"
 	metaformat "meta/meta-format"
 	metastring "meta/meta-string"
-	"meta/set"
+	set "meta/metaset"
 	"reflect"
 	"sync"
 )
